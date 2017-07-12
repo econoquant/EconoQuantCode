@@ -1,5 +1,3 @@
-oldwd <- getwd()
-setwd('C:/Users/Mario/Dropbox/R/PrevisaoMacro')
 
 ################### Carregar dados #######################################
 ipca <- read.csv('ipca.csv',header = T, sep = ';', dec = ',')
@@ -9,7 +7,7 @@ ipca <- ts(ipca[,2], start = c(1980,1), freq = 12)
 library(changepoint)
 library(ggfortify)
 
-autoplot(cpt.meanvar(ipca), main='Variação mensal do IPCA (%)')+
+autoplot(cpt.meanvar(ipca), main='VariaÃ§Ã£o mensal do IPCA (%)')+
   scale_x_date(date_breaks = '1 year',date_labels = "%b %y")
 ipca <- window(ipca, c(1995,1), freq =12)
 ipca <- window(ipca, c(2004,1), freq =12)
@@ -24,8 +22,8 @@ fit_sarima <- auto.arima(train, seasonal = T)
 summary(fit_sarima)
 
 ggtsdisplay(residuals(fit_sarima))
-ggAcf(residuals(fit_sarima), main = "Autocorrelação resíduos")
-# Ljung Box: H0 resíduos sao iid
+ggAcf(residuals(fit_sarima), main = "AutocorrelaÃ§Ã£o resÃ­duos")
+# Ljung Box: H0 resÃ­duos sao iid
 Box.test(residuals(fit_sarima), lag=24, fitdf=length(coef(fit_sarima)),
          type="Ljung")
 
@@ -38,7 +36,7 @@ accuracy(fcast.fit_sarima, test)
 fit <- Arima(test, model = fit_sarima)
 accuracy(fit)
 
-############### Previsão ###############################################
+############### PrevisÃ£o ###############################################
 onestep <- fitted(fit) # valores previsao um passo a frente
 
 plot(forecast(fit_sarima, h=12),xlab='', ylab='(% a.m.)', bty='l',
@@ -46,4 +44,4 @@ plot(forecast(fit_sarima, h=12),xlab='', ylab='(% a.m.)', bty='l',
 lines(test, col='black', lwd=2)
 lines(onestep, col='red', lwd=2)
 legend('topleft', col=c('blue','red'), lty=c(1,1), lwd=c(2,2),
-       legend=c('12 meses', '1 mês'))
+       legend=c('12 meses', '1 mÃªs'))
